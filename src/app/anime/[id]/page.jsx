@@ -1,16 +1,62 @@
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
-import Image from "next/image";
+'use client'
 
-const getAnimeDetails = async (id) => {
-  const res = await fetch(`https://api.jikan.moe/v4/anime/${id}`);
-  if (!res.ok) throw new Error("Failed to fetch anime details");
-  const data = await res.json();
-  return data.data;
-};
+import { supabase } from "@/lib/supabaseClient"
+import { useEffect, useState } from "react"
+import { useParams, useRouter } from "next/navigation"
+import Header from "@/components/Header"
+import Footer from "@/components/Footer"
+import Image from "next/image"
 
-const AnimeDetailPage = async ({ params }) => {
-  const anime = await getAnimeDetails(params.id);
+const AnimeDetailPage = () => {
+  const [anime, setAnime] = useState(null)
+  const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const router = useRouter()
+  const { id } = useParams()
+
+  // Fetch Anime
+  const fetchAnime = async () => {
+    const res = await fetch(`https://api.jikan.moe/v4/anime/${id}`)
+    const data = await res.json()
+    setAnime(data.data)
+    setLoading(false)
+  }
+
+  // Check auth
+  const checkUser = async () => {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) router.push("/login")
+    else setUser(user)
+  }
+
+  useEffect(() => {
+    checkUser()
+    fetchAnime()
+  }, [])
+
+  // Add to Supabase
+  const handleSave = async (status) => {
+    if (!user || !anime) return
+
+    const { error } = await supabase.from("anime_lists").insert([
+      {
+        user_id: user.id,
+        anime_id: anime.mal_id,
+        title: anime.title,
+        image_url: anime.images.webp.large_image_url,
+        status: status,
+      }
+    ])
+
+    if (error) {
+      console.error(error)
+      alert("Failed to save.")
+    } else {
+      alert(`Anime marked as ${status === 'watch_later' ? 'Watch Later' : 'Watched'}!`)
+    }
+  }
+
+  if (loading || !anime) return <p className="p-10">Loading...</p>
 
   return (
     <>
@@ -35,26 +81,23 @@ const AnimeDetailPage = async ({ params }) => {
               </div>
 
               <div className="space-y-2 mt-4">
-                <p>
-                  <strong>📺 Episodes:</strong> {anime.episodes}
-                </p>
-                <p>
-                  <strong>📌 Status:</strong> {anime.status}
-                </p>
-                <p>
-                  <strong>🎯 Rating:</strong> {anime.rating}
-                </p>
-                <p>
-                  <strong>🎭 Genres:</strong>{" "}
-                  {anime.genres.map((g) => g.name).join(", ")}
-                </p>
+                <p><strong>📺 Episodes:</strong> {anime.episodes}</p>
+                <p><strong>📌 Status:</strong> {anime.status}</p>
+                <p><strong>🎯 Rating:</strong> {anime.rating}</p>
+                <p><strong>🎭 Genres:</strong> {anime.genres.map((g) => g.name).join(", ")}</p>
               </div>
 
               <div className="mt-6 flex flex-wrap gap-4">
-                <button className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition duration-200">
+                <button
+                  className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition"
+                  onClick={() => handleSave('watch_later')}
+                >
                   📥 Watch Later
                 </button>
-                <button className="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700 transition duration-200">
+                <button
+                  className="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700 transition"
+                  onClick={() => handleSave('watched')}
+                >
                   ✅ Already Watched
                 </button>
               </div>
@@ -64,7 +107,7 @@ const AnimeDetailPage = async ({ params }) => {
       </div>
       <Footer />
     </>
-  );
-};
+  )
+}
 
-export default AnimeDetailPage;
+export default AnimeDetailPage
