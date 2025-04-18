@@ -31,7 +31,7 @@ const HeroSection = () => {
                 alt="OtakuHub App Screenshot"
                 width={800}
                 height={800}
-                className="object-cover"
+                className="h-full object-cover"
                 priority
               />
             </div>

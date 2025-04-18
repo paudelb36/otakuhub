@@ -1,7 +1,7 @@
 const Footer = () => {
     return (
-      <footer className="bg-gray-800 text-white text-center py-4 mt-10">
-        © {new Date().getFullYear()} MyAnimeApp. All rights reserved.
+      <footer className=" text-black text-center py-4 mt-10">
+        © {new Date().getFullYear()} OtakuHub. All rights reserved.
       </footer>
     );
   };
