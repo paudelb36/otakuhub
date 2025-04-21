@@ -1,5 +1,6 @@
 import Image from "next/image";
-import Button from "./ui/Button";
+import Button from "../ui/Button";
+import Link from "next/link";
 
 const HeroSection = () => {
   return (
@@ -18,10 +19,12 @@ const HeroSection = () => {
               </p>
             </div>
             <div className="flex flex-col gap-2 min-[400px]:flex-row">
-              <Button className="bg-purple-600 hover:bg-purple-700">
-                Get Started
-              </Button>
-              <Button variant="outline">Learn More</Button>
+              <Link href="/register">
+                <Button className="bg-purple-600 hover:bg-purple-700 ">
+                  Get Started
+                </Button>
+              </Link>
+              {/* <Button variant="outline">Learn More</Button> */}
             </div>
           </div>
           <div className="relative flex items-center justify-center">

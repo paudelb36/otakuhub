@@ -1,7 +1,7 @@
 'use client'
 
-import Footer from "@/components/Footer"
-import Header from "@/components/Header"
+import Footer from "@/components/layout/Footer"
+import Header from "@/components/layout/Header"
 import { supabase } from "@/lib/supabaseClient"
 import Link from "next/link"
 import { useRouter } from "next/navigation"

@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const AnimeCard = ({ anime }) => {
   return (
-    <Link href={`/anime/${anime.mal_id}`} className="w-full sm:w-[160px] md:w-[200px]">
+    <Link href={`/anime/${anime.mal_id}-${anime.title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')}`} className="w-full sm:w-[160px] md:w-[200px]">
       <div className="bg-white shadow-md rounded-2xl overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
         <div className="relative w-full aspect-[2/3]">
           <Image

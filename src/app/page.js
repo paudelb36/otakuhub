@@ -1,8 +1,8 @@
 'use client'
-import AnimeCard from "@/components/AnimeCard";
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
-import HeroSection from "@/components/HeroSection";
+import AnimeCard from "@/components/sections/AnimeCard";
+import Footer from "@/components/layout/Footer";
+import Header from "@/components/layout/Header";
+import HeroSection from "@/components/sections/HeroSection";
 import { useEffect, useState } from "react";
 
 export default function Home() {
