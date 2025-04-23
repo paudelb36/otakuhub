@@ -46,7 +46,7 @@ const Register = () => {
     if (error) {
       setErrorMessage(error.message)
     } else {
-      alert('Account created successfully. Please check your email to verify.')
+      alert('Account created successfully.')
       router.push('/login')  // Redirect to login page after successful registration
     }
   }
